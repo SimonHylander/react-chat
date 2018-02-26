@@ -22,4 +22,12 @@ class MainController extends Controller {
     public function main() {
         return $this->render('index.html.twig');
     }
+
+    /**
+     * @Route("/main", name="main2")
+     * @Method("GET")
+     */
+    public function main2() {
+        return $this->render('index.html.twig');
+    }
 }

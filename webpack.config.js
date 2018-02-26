@@ -2,33 +2,22 @@
  * Created by shy on 2018-01-02.
  */
 
-var webpack = require('webpack');
-var path = require('path');
+var Encore = require('@symfony/webpack-encore');
 
-var BUILD_DIR = path.resolve(__dirname, 'public/src/public');
-var APP_DIR = path.resolve(__dirname, 'public/src/app');
+Encore
+    .setOutputPath('public/build/') // the project directory where compiled assets will be stored
+    .setPublicPath('/build') // the public path used by the web server to access the previous directory
+    .cleanupOutputBeforeBuild()
+    .enableSourceMaps(!Encore.isProduction())
+    // .enableVersioning(Encore.isProduction()) // uncomment to create hashed filenames (e.g. app.abc123.css)
+    .addEntry('js/app', './assets/app/index.jsx') // uncomment to define the assets of the project
+    .addStyleEntry('css/libs', './assets/styles/libs.scss')
+    .addStyleEntry('css/app', './assets/styles/app.scss')
+    .enableSassLoader() // uncomment if you use Sass/SCSS files
+    .enableReactPreset()
+    .configureBabel(function(babelConfig) {
+        babelConfig.presets.push('es2017');
+    })
+;
 
-module.exports = function(env) {
-
-    return {
-        entry: [APP_DIR + '/index.jsx'],
-        output: {
-            filename: 'bundle.js',
-            path: BUILD_DIR
-            //path: path.resolve(__dirname, 'dist')
-        },
-        module: {
-            loaders : [
-                {
-                    test : /\.jsx?/,
-                    loader : 'babel-loader',
-                    include : APP_DIR,
-                    exclude: '/node_modules/'
-                }
-            ]
-        },
-        resolve: {
-            extensions: ['.js', '.jsx']
-        }
-    }
-};
+module.exports = Encore.getWebpackConfig();
